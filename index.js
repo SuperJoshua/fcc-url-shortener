@@ -20,7 +20,28 @@ app.get("/", function(req, res) {
 
 /* The previous tutorials gave the idea that MongoDB and Mongoose were critical to the completion of this project. Even the old Glitch boilerplate had these files (libraries? frameworks?) in them. This Gitpod boilerplate, however, does not. I think Node is already a mess, and I'd rather not install more dependencies, so I'm using JSON. Maybe not a best practice. Maybe not secure. Maybe these tutorials could use better instruction, rather than osillating between hand-holding and butt-kicking. So many maybes. */
 
-app.post("/api/shorturl", (req, res) => {
+app.route("/api/shorturl/")
+.get((req, res) => {
+   /* The FCC instructions here are pretty spotty. In testing values for this feature on the example site, a non-integer -- like "2b" -- caused it to never resolve. So, I'm using the same error I got for both "invalid" input and for the input not being found in the database. */
+   console.log("in app.post, /api/shorturl/:n")
+   console.log(`n: ${req.params.n} ${typeof req.params.n}`)
+   if (/^\d+$/.test(req.params.n)) {
+      console.log("n is positive integer")
+      short_urls = JSON.parse(fs.readFileSync("short.json"))
+      if (short_urls[req.params.n]) {
+         console.log("short url found")
+         const {url: redirect} = short_urls[req.params.n]
+         res.redirect(redirect)
+      } else {
+         console.log("short url NOT found")
+         res.json({"error": "No short URL found for the given input"})
+      }
+   } else {
+      console.log("n is NOT positive integer")
+      res.json({"error": "No short URL found for the given input"})
+   }
+})
+.post((req, res) => {
    /* URL apparently needs a full URL, but dns doesn't like having the origin tag along. I suppose this is because the hostname is the only part that has anything to do with an IP database. But it seems reasonable for a user to enter a URL without the origin, but doing so would fail the URL test. ... I'm going to try to limit my assumptions and just get the FCC tests to pass. */
    console.log("in app.post, /api/shorturl")
    try {
@@ -54,27 +75,6 @@ app.post("/api/shorturl", (req, res) => {
       */
    } catch (error) {
       res.json({"error": "invalid url"})
-   }
-})
-
-app.get("/api/shorturl/:n", (req, res) => {
-   /* The FCC instructions here are pretty spotty. In testing values for this feature on the example site, a non-integer -- like "2b" -- caused it to never resolve. So, I'm using the same error I got for both "invalid" input and for the input not being found in the database. */
-   console.log("in app.post, /api/shorturl/:n")
-   console.log(`n: ${req.params.n} ${typeof req.params.n}`)
-   if (/^\d+$/.test(req.params.n)) {
-      console.log("n is positive integer")
-      short_urls = JSON.parse(fs.readFileSync("short.json"))
-      if (short_urls[req.params.n]) {
-         console.log("short url found")
-         const {url: redirect} = short_urls[req.params.n]
-         res.redirect(redirect)
-      } else {
-         console.log("short url NOT found")
-         res.json({"error": "No short URL found for the given input"})
-      }
-   } else {
-      console.log("n is NOT positive integer")
-      res.json({"error": "No short URL found for the given input"})
    }
 })
 
