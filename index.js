@@ -44,13 +44,16 @@ app.post("/api/shorturl", (req, res) => {
          if (err) {res.json({"error": "invalid url"})}
          else {
             const long_urls = JSON.parse(fs.readFileSync("./db/long.json"))
-            const long_url = long_urls[posted_url.href]
-            if (long_url) {res.json({"original_url": long_url, "short_url": long_urls[long_url]})}
+            const long_url = posted_url.href
+            if (long_urls[long_url]) {res.json({"original_url": long_url, "short_url": long_urls[long_url]})}
             else {
                const short_urls = JSON.parse(fs.readFileSync("./db/short.json"))
                const short_url = Object.keys(short_urls).length.toString()
                long_urls[long_url] = short_url
                short_urls[short_url] = long_url
+               console.table(long_urls)
+               console.table(short_urls)
+               console.log(long_url, short_url)
                fs.writeFileSync("./db/long.json", JSON.stringify(long_urls))
                fs.writeFileSync("./db/short.json", JSON.stringify(short_urls))
                res.json({"original_url": long_url, "short_url": short_url})
