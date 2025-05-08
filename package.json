@@ -1,6 +1,6 @@
 {
   "name": "shorturl",
-  "version": "0.0.3",
+  "version": "0.1.3",
   "author": "freecodecamp",
   "student": "joshua",
   "description": "API project for freeCodeCamp",
@@ -8,10 +8,10 @@
   "scripts": {
     "start": "node index.js"
   },
+  "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.19.0",
+    "body-parser": "^2.2.0",
     "cors": "^2.8.5",
-    "express": "^4.17.1"
-  },
-  "license": "MIT"
+    "express": "^5.1.0"
+  }
 }
