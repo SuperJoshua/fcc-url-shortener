@@ -36,7 +36,7 @@ app.get("/api/shorturl/:n", (req, res) => {
 })
 
 app.post("/api/shorturl", (req, res) => {
-   // No sanitization is done here. The user could potentially enter a well-formatted malicious URL. Security wasn't part of this exercise. This also looks really ugly.
+   // No sanitization is done here. The user could potentially enter a well-formatted, malicious URL. Security wasn't part of this exercise. This solution is also questionably laid out.
 
    try {
       const posted_url = new URL(req.body.url)
